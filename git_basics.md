@@ -9,15 +9,20 @@
 *commit*, **Git** registers the changes against a previous version of every file that is tracked.
 
 When we add track of a file from our project for the first time, **Git** stores this *version* of the file. Every
-time we register a change of such file, **Git** identifies the differences between the previous version of the file
-and the fresh one. That means, **Git** only registers those changes, **not the entire file!** This is really convenient
-because a continuous register of each version for each file would end in heavy repositories, and a poor use of our
-storage backend. Every registered version of each tracked file can be recomposed using the initial version and the
-series of registered changes until the version you aim to recover, hence there is no real need to store an image of
-the entire file each time you perform a _commit_.
+time we register a change of such file, **Git** identifies the differences between a previous version (not necessarily
+the previous one) of the file and the fresh one. That means, **Git** only registers those changes,
+**not the entire file!** This is really convenient because a continuous storage of each version for each file would end
+in heavy repositories, and a poor use of our storage backend. Every registered version of each tracked file can be
+recomposed using the initial version and the series of registered changes until the version you aim to recover, hence
+there is no real need to store an image of the entire file each time you perform a _commit_.
 
-Then, **what is a _commit_**? We can define a _commit_ as an entry in the history record of a project that identifies
-the changes between the previous image of a project and the current one.
+Then, **what is a _commit_**? We can define a _commit_ as an entry in the history record of a project that generates
+a snapshot of the state of the project. When a file includes changes between the parent _commit_ and the current
+status, **Git** stores only the changes to the file. When a file remains untouched, it simply points to the _commit_
+that includes for the first time the current state of the file. It also identifies the parent _commit_. This
+is very useful to reconstruct the full history tree of our project. So that's it (broadly speaking): a series of
+references to files and changes, and references to the parent *commit*s (some special scenarios might produce two
+ancestor *commits* rather than only one).
 
 Let's take a look at a project's history record:
 
@@ -25,7 +30,7 @@ Let's take a look at a project's history record:
 
 We can identify the following key components:
 - **The commit's message**: Usually a short sentence that describes the purpose of the changes.
-- **The commit's author**: Every commit needs to identify the author of the changes.
+- **The commit's author**: Every commit needs to identify the author of the changes (plus his/her email).
 - **A timestamp**: This reference allows ordering the changes by time.
 - **A hash**: How do we identify every commit unambiguously? Easy, a hash of the commit is used as identifier. Though
   we usually see a hash composed of 7 alpha-numeric characters, a commit hash includes 40 alpha-numeric characters.
@@ -109,3 +114,114 @@ to follow:
 ### Further Reading
 
 - [Pro Git](https://git-scm.com/book/en/v2), Chapter 2: Git Basics.
+
+## The Branch
+
+A branch is, together with the *commit*, one of the most important features of **Git**. It allows to organise *commit*s
+into several *logic* areas or contexts.
+
+To clarify this definition, let's consider an example in which a project's development distinguish between two
+development contexts: stable code and development code. The former context identifies code that is ready for
+production; the latter code that is currently being developed, and might contain unfinished stuff and potential bugs.
+How do we tell easily to other people what part of the code is considered stable and what is not? Easy, using branches.
+We could define two branches: **main** and **devel** for this purpose. This way, whenever someone access our code,
+it is clearly stated that code within the branch **main** is considered stable, and within **devel** is not.
+
+**Git** branches are pointers to *commit*s of our project. Since our project already features a hierarchical structure
+thanks to *commit*'s pointers to ancestors, branches don't need to do anything special, just point to the last
+*commit* that is included in the branch. We can track all the *commit*s that belong to the branch just following these
+ancestor link of the *commit*s until we reach a *commit* that is associated as the latest one of another branch.
+
+This mechanism is pretty efficient, which means we shall no worry about having many branches as they are cheap! Use
+as many as you wish, but consider that the more branches you add, the more difficult your project will be to manage.
+
+### Branch Organisation
+
+We already mentioned the **main** branch. You'll see that name quite often. Almost every project includes such name
+for the *stable* code. Old projects might include the branch **master** instead of **main**. Some years ago, the
+naming system suffered changes to avoid discriminatory words. So don't panic if you can't find the branch **main** in
+old projects! The word *main* and the associated branch has nothing special. We could have use the word *favourite*
+to name the principal branch of our project. This is up to you. However, you'll find that most developers follow the
+rule of naming **main** the principal branch of a project. This is a useful hint for external people to a project to
+easily identify *stable* code.
+
+The term stable was always in italics, why? The rule of having only stable code that is ready to use by other people
+in the **main** branch is not a must. While some developers only include stable code that is ready to be released
+in the **main** branch, other developers don't distinguish at all any context in their projects, and include all the
+code (ready or not) within a single **main** branch.
+
+The most common scenario when we aim to use the code from a project's repository is that we are offered the **main**
+branch in the repository's main page. Feel free to explore several repositories in GitHub. Above the file list of the
+repository, you'll find a dropdown menu with **main** preselected as the branch. Hence naming **main** the principal
+branch is not mandatory, it is advised to do so, as you'll provide very useful information to other developers when
+they reach your code.
+
+Besides this rule, we can't identify many more advised rules that we should follow. As it happens with how to organise
+what content should be included in a single *commit*, the naming policy for the branches greatly depends on your sw
+development style.
+
+One of the most used workflows is [GitFlow][gitflow]. It differentiates several categories for the branches:
+
+- **main** for stable released code.
+- **develop** for the common development branch.
+- **<feature>** with *feature* as the name of the feature you're aiming to implement in such branch.
+
+This workflow makes a very tidy categorisation of the code, but it also has cons as being harder to understand
+for beginners and heavy to maintain.
+
+As final thought for this section, I'd advise you to always ask the maintainer of your project what naming schema you
+shall follow. If you're developing your own project, feel free to use whatever fits you best: if you aim to develop
+something quick with no hustle, push everything into the **main** branch. If you love to categorise things, go for
+some alike flow to **GitFlow**.
+
+[gitflow]: https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+
+### Fork and Merge
+
+The most common operations that you'll do with branches are: fork and merge. The former refers to the process in which
+a new branch is created. You take a particular *commit* as the ancestor and you diverge a new branch from it. The
+latter is the opposite process: two branches that share a common ancestor, i.e. one was forked from the other, join
+their content into a single (merge) *commit*.
+
+Forking a branch has no mystery at all: you select the *commit* that will be use as ancestor of the first *commit* of
+the new branch, and, whenever you perform the first *commit* of the new branch, the fork will be completed. Consider
+the following example taken from the book Pro Git:
+
+![Branching example](resources/images/branch_example.png)
+
+We can identify two branches there: **master** (there it goes an example of the old naming system) and **testing**.
+Both share a common ancestor: ***f30ab***. From that *commit* downwards, we consider the rest of the *commit*s to
+belong to the **master** branch because in our logic organisation of the project's context, **master** scores higher
+in the importance hierarchy of our branch naming system.
+
+Sooner or later, you'll need to merge a branch into another. It is crucial to properly understand this mechanism.
+Imagine that in our former example, **testing** evolves adding several new *commit*s that implement a new feature.
+When the new feature is considered as done, the most common use case would be to merge the content of the branch
+**testing** into the branch **master**. This way, the new feature will be exposed as *stable*.
+
+When we attempt to merge content, **Git** evaluates the changes respect to the common ancestor for both the top of
+the branch **master** and **testing**. Sometimes the common ancestor is the target *commit* for the merge. This
+scenario is the easiest one, and it usually don't provoke issues in the merge. However, when both branches diverge
+from the common ancestor, **Git** has to perform a *three-way* merge. Quite often this scenario provokes conflicts:
+A piece of code in the ancestor was modified on both sides of the merge, what change should prevail? **Git** is really
+good at doing its job, but it can't read your mind (yet). Thus human intervention will be required to resolve the
+conflict.
+
+Fork and merge will be in your daily routine: when you get assigned a new task, you, most likely, will fork an existing
+branch, do your job, and ... Merge, wasn't it? Maybe not. Performing a merge is usually a tricky task, that's why
+experience team mates usually get assigned this task. Forking is a relatively harmless thing, but consider that when
+you merge your changes into another branch, you can break pieces of code that others relay on. That's why unless you're
+working on your onw in a project, merges are usually requested. Somebody else gets assigned the task of reviewing your
+changes and approve the final merge. Even if you are working on your own, it is advisable to open *merge requests*
+rather than going straight for a manual merge to force you to read twice your changes, and double-check if your changes
+meet the chosen quality standards: tests are passing, code is documented,...
+
+Besides these two operations, there exists other advance operations such as the *rebase* that you can apply to
+branches. However, these are more advanced techniques, i.e. a bad use ends in a pretty big disaster, so they are
+included in the advanced part of this tutorial.
+
+### Further Reading
+
+- [Pro Git](https://git-scm.com/book/en/v2), Chapter 3: Git Branching.
+
+
