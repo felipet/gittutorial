@@ -110,6 +110,29 @@ to follow:
   add some sort of binary content to your project, so I don't say it is forbidden. Just think twice whether you are
   pushing a binary that will evolve time to time or not. In the former scenario, you better opt for alternative
   ways to store and share such content. For example, [GitHub Packages](https://github.com/features/packages).
+- Broadly speaking, **don't add generated files**. You should only add genuine content to the tracked files. Generated
+  files should be easily reproducible using the genuine content of your project plus some guidelines. Sometimes, when
+  the building process takes a considerable amount of time, people include final binaries. Remember, there exist
+  better alternatives to **Git** to store and share such type of content.
+
+## Commit Flow
+
+Reached this point there's only one missing topic to discuss about *commit*s, what do I need to make one? Committing
+changes is a process about selecting what changes you aim to register, and what changes shall remain unregistered.
+
+### Status of a Project's Directory
+
+Before we need to introduce how changes are categorized by **Git**. Consider the root directory of your project at a
+given moment in time. The first way to categorize files in your project is whether they are tracked by **Git** or not.
+Remember that **Git** stores changes only on tracked files. Eventually, you might introduce new files into your
+project. **Git** will tell you those files exist somewhere in your project's directory. Until you explicitly add an
+untracked file, it will stay there forever, appearing as a new file, thus changes that you might apply to such files
+are not really tracked.
+
+You can configure **Git** to *ignore* certain type of files or complete paths in your project. This is really useful as
+it is really annoying to find tens or hundreds of untracked files when you have log files, or build directories.
+
+You can find new files, modified files and deleted files.
 
 ### Further Reading
 

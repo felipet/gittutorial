@@ -7,4 +7,4 @@ Another tutorial about how to use Git & GitHub.
 
 ## Sections
 
-- **Git Basics** \[[link](https://felipet.github.io/gittutorial/git_basics.html)\]
+- **Git Basics** \[[link](https://felipet.github.io/gittutorial/theory/git_basics.html)\]
