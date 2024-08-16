@@ -131,8 +131,40 @@ are not really tracked.
 
 You can configure **Git** to *ignore* certain type of files or complete paths in your project. This is really useful as
 it is really annoying to find tens or hundreds of untracked files when you have log files, or build directories.
+Find instructions to set up this feature in ???.
 
-You can find new files, modified files and deleted files.
+Add new files to track whenever you need it, it's not a big deal. Considering files that were tracked before, we get
+notified when **Git** detects that any of those include changes respect to the parent *commit*. If you aim to register
+a change, you have to promote it to the ***stage***. The stage is the _place_ where git collects all the changes that
+were marked as ready to be included in the next *commit*. Which means, whenever you make a *commit* all those staged
+changes get registered as the changes of the *commit* whilst changes that were out of the stage remain unregistered.
+
+Briefly, **Git** stablish 3 categorizes (plus one): untracked files, modified files, and staged files. Moving files
+between those categories is the daily routine using **Git**. The extra category is a special one, which is not
+straightly related to a *commit*'s flow, is called the ***stash***. Consider this as a *limbo* for changes. Sometimes
+you need to preserve some unfinished changes, but you are not ready to *commit* them. Here is where the stash plays
+a key role. You can send all your changes (staged or not) there, and leave your project in a tidy status. After you
+do your stuff, you recover your changes from the stash and you continue your previous job. Read more details of the
+stash in the Advance chapter ??? .
+
+## Making a Commit
+
+Once you've got a grasp on the different categories **Git** applies to files, making a *commit* is an easy job. You
+just ned to select what changes or new files shall be included into the *commit*, and when everything is ready,
+using some of the available tools, you make a new *commit*. Remember the rules mentioned before for the brief message
+and long message.
+
+There's no rush to *commit* after you stage some change. In fact, you can change your mind and remove from the stage
+a change if you need to. Sometimes, you'll find that some of the changes of a file don't really match the scope of the
+*commit* you're about to make. For instance, you are about to fix a bug in your code, and by the way, you found a few
+typos in the docs. Should you group both changes into the same *commit*? Ideally you shouldn't. There are two clearly
+different scopes for your changes: fixing a bug and fixing a typo. If for some reason one of the proposed changes don't
+pass the filter of the review performed during a merge request process, you can simply take it out if you made a good
+scope splitting in your *commit*s. If you didn't you'll have to manually take out some code changes, do another
+commit and push it to pass the review.
+
+For that scenario, most tools offer the possibility of staging only parts of the file's changes rather than the entire
+set of changes at once. Check that out in the *hands-on* chapter!
 
 ### Further Reading
 
