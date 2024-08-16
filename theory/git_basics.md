@@ -26,7 +26,7 @@ ancestor *commits* rather than only one).
 
 Let's take a look at a project's history record:
 
-![Sample of github/training-kit repository](resources/images/git_history_sample.png)
+![Sample of github/training-kit repository](../resources/images/git_history_sample.png)
 
 We can identify the following key components:
 - **The commit's message**: Usually a short sentence that describes the purpose of the changes.
@@ -242,7 +242,7 @@ Forking a branch has no mystery at all: you select the *commit* that will be use
 the new branch, and, whenever you perform the first *commit* of the new branch, the fork will be completed. Consider
 the following example taken from the book Pro Git:
 
-![Branching example](resources/images/branch_example.png)
+![Branching example](../resources/images/branch_example.png)
 
 We can identify two branches there: **master** (there it goes an example of the old naming system) and **testing**.
 Both share a common ancestor: ***f30ab***. From that *commit* downwards, we consider the rest of the *commit*s to
